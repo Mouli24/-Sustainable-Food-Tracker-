@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFood Tracker</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- App Modules -->
+    <script type="module" src="assets/js/main.js" defer></script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <nav class="navbar container">
+            <a href="#" class="logo" data-page="home">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.22 8.39C16.22 8.39 15.3 9.3 15.3 9.3C15.3 9.3 16.25 10.23 16.25 10.23C17.15 10.3 18 11.14 18 12.18C18 13.53 16.88 14.65 15.52 14.65C15.22 14.65 14.93 14.59 14.67 14.49L13.13 16.03C13.91 16.34 14.76 16.5 15.65 16.5C18.12 16.5 20.15 14.58 20.15 12.18C20.15 10.39 18.77 8.89 17.03 8.54C16.78 8.49 16.51 8.44 16.22 8.39ZM12 4C13.06 4 14.06 4.28 14.93 4.77L8.77 10.93C8.28 10.06 8 9.06 8 8C8 5.79 9.79 4 12 4ZM8.39 8.78L14.49 14.67C14.59 14.93 14.65 15.22 14.65 15.52C14.65 16.88 13.53 18 12.18 18C11.14 18 10.3 17.15 10.23 16.25C10.23 16.25 9.3 15.3 9.3 15.3C9.3 15.3 8.39 16.22 8.39 16.22C8.44 16.51 8.49 16.78 8.54 17.03C8.89 18.77 10.39 20.15 12.18 20.15C14.58 20.15 16.5 18.12 16.5 15.65C16.5 14.76 16.34 13.91 16.03 13.13L10.93 8.77C10.06 9.22 9.06 9.5 8 9.5C5.79 9.5 4 7.71 4 5.5C4 4.54 4.24 3.65 4.66 2.88C3.12 4.2 2.25 6.09 2.25 8.18C2.25 10.39 3.6 12.28 5.5 12.87V12.87C6.01 12.72 6.47 12.48 6.87 12.17L8.39 8.78Z"
+                        fill="#3A8E71" />
+                </svg>
+                <span>EcoFood Tracker</span>
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="search">Search</a></li>
+                <li><a href="#" class="nav-link" data-page="dashboard">Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="profile">Profile</a></li>
+                <li><a href="#" class="nav-link" data-page="about">About</a></li>
+            </ul>
+            <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section id="page-home" class="page active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <span class="tag">Powered by OpenFoodFacts</span>
+                    <h1>Make Every Meal Healthier & Sustainable</h1>
+                    <p>Scan, search, and discover the nutritional value and environmental impact of your food. Make
+                        informed choices for your health and the planet.</p>
+                    <div class="hero-actions">
+                        <div class="search-input-wrapper">
+                            <input type="search" class="hero-search" id="hero-search-input"
+                                placeholder="Search for food products...">
+                            <button id="hero-search-btn" class="search-btn">Search</button>
+                            <div id="home-product-cards" class="home-product-cards hidden"></div>
+                        </div>
+                        <button class="btn btn-primary" id="hero-start-scanning">Start Scanning</button>
+                        <button class="btn btn-secondary" id="hero-learn-more">Learn More</button>
+                    </div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1590779032111-6313659207d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                        alt="Fresh yellow bell peppers" class="hero-image">
+                    <div class="hero-badge nutrition-badge">
+                        <span class="badge-grade">A</span>
+                        <div>
+                            <strong>Nutrition Score</strong>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+                    <div class="hero-badge co2-badge">
+                        <svg viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M15.03 10.47a.75.75 0 010 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L10 14.44l3.97-3.97a.75.75 0 011.06 0zM15.03 6.47a.75.75 0 010 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L10 10.44l3.97-3.97a.75.75 0 011.06 0z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <div>
+                            <strong>CO₂ Saved</strong>
+                            <span>12.4 kg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="page-search" class="page">
+            <h2>Search & Discover</h2>
+            <p>Find nutritional and environmental information for any food product.</p>
+
+            <div class="search-large-wrapper">
+                <input type="search" id="main-search-input" class="search-large"
+                    placeholder="Search by product name, brand, or barcode...">
+            </div>
+
+            <div id="search-results-container">
+            </div>
+
+            <div class="card-grid three-cols">
+                <div class="card card-action" id="action-scan-barcode" tabindex="0" role="button">
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <path d="M4 6h16v2H4zm0 4h16v2H4zm0 4h16v2H4zm0 4h16v2H4zM2 4h2v16H2zm18 0h2v16h-2z"></path>
+                    </svg>
+                    <h3>Scan Barcode</h3>
+                    <p>Use your device camera to scan product barcodes.</p>
+                </div>
+                <div class="card card-action" id="action-upload-image" tabindex="0" role="button">
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 4h14v2H5z"></path>
+                    </svg>
+                    <h3>Upload Image</h3>
+                    <p>Drag & drop or click to upload a product photo.</p>
+                    <input type="file" id="image-upload-input" class="hidden" accept="image/*">
+                    <img id="image-preview" class="hidden" alt="Image preview">
+                </div>
+                <div class="card card-action" id="action-enter-barcode" tabindex="0" role="button">
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <path d="M3 5h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"></path>
+                    </svg>
+                    <h3>Enter Barcode</h3>
+                    <p>Manually enter a product barcode number.</p>
+                </div>
+            </div>
+
+            <h3>Recent Searches</h3>
+            <div class="chip-container" id="recent-searches">
+                <span class="chip">Almond Milk</span>
+                <span class="chip">Whole Grain Bread</span>
+                <span class="chip">Greek Yogurt</span>
+            </div>
+        </section>
+        <section id="page-dashboard" class="page">
+            <h2>Eco-Points Dashboard</h2>
+            <p>Track your progress and earn rewards for sustainable choices.</p>
+
+            <div class="dashboard-layout">
+                <div class="dashboard-main">
+                    <div class="card eco-points-card">
+                        <div class="points-info">
+                            <span class="points-label">Total Eco-Points</span>
+                            <span class="points-total" id="total-eco-points">1,247</span>
+                        </div>
+                        <div class="points-chart-wrapper">
+                            <canvas id="ecoPointsChart"></canvas>
+                            <div class="points-chart-text">
+                                <span id="eco-points-percentage">49%</span>
+                                <span>to Level 9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Weekly Progress</h3>
+                        <div class="chart-container">
+                            <canvas id="weeklyProgressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <aside class="dashboard-sidebar">
+                    <div class="card">
+                        <h3>Leaderboard</h3>
+                        <ol class="leaderboard-list" id="leaderboard-list">
+                        </ol>
+                    </div>
+                    <div class="card">
+                        <h3>Actions</h3>
+                        <button class="btn btn-secondary full-width" id="export-csv-btn">
+                            Export Data (CSV)
+                        </button>
+                        <button class="btn btn-danger full-width" id="clear-history-btn">
+                            Clear History
+                        </button>
+                    </div>
+                    <div class="card">
+                        <h3>Your Impact</h3>
+                        <div class="impact-stat">
+                            <label for="impact-scans">Total Scans</label>
+                            <progress id="impact-scans" value="80" max="100"></progress>
+                        </div>
+                        <div class="impact-stat">
+                            <label for="impact-co2">CO₂ Saved</label>
+                            <progress id="impact-co2" value="60" max="100"></progress>
+                        </div>
+                        <div class="impact-stat">
+                            <label for="impact-healthy">Healthy Choices</label>
+                            <progress id="impact-healthy" value="89" max="100"></progress>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+        <section id="page-profile" class="page">
+            <h2>Profile & Settings</h2>
+            <p>Manage your preferences and saved items.</p>
+
+            <div class="profile-layout">
+                <div class="profile-main">
+                    <div class="card">
+                        <h3>Appearance</h3>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Dark Mode</strong>
+                                <p>Switch to dark theme</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-dark-mode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Larger Text</strong>
+                                <p>Increase font size for better readability</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-large-text">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Privacy & Data</h3>
+                        <div class="setting-item">
+                            <div>
+                                <strong>Save Scan History</strong>
+                                <p>Save your scanned items locally on this device</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-save-history" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="privacy-note">
+                            We are privacy-first. All your data stays on your device. We don't track you or sell your
+                            data.
+                        </p>
+                    </div>
+                </div>
+                <aside class="profile-sidebar">
+                    <div class="card">
+                        <h3>Favorites</h3>
+                        <div class="favorites-list" id="favorites-list">
+                            <p>You have no favorites yet.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Quick Actions</h3>
+                        <ul class="quick-actions-list">
+                            <li><a href="#" id="quick-view-history">View Full History</a></li>
+                            <li><a href="#" id="quick-export-data">Export My Data</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </section>
+        <section id="page-about" class="page">
+            <div class="about-hero">
+                <h2>About EcoFood Tracker</h2>
+                <p>Empowering consumers to make healthier, more sustainable food choices through transparency and data.
+                </p>
+            </div>
+
+            <div class="about-mission card">
+                <div class="mission-text">
+                    <h3>Our Mission</h3>
+                    <p>We believe that everyone deserves access to clear, actionable information about the food they
+                        eat. Our mission is to democratize food transparency and help people make choices that are good
+                        for their health and the planet.</p>
+                </div>
+                <div class="mission-image">
+                    <img src="https://images.unsplash.com/photo-1498837167922-ddd275259bE2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                        alt="Fresh fruits and vegetables">
+                </div>
+            </div>
+
+            <div class="about-features">
+                <h3 class="text-center">What Makes Us Different</h3>
+                <p class="text-center subtitle">Privacy-first, open-source, and community-driven.</p>
+                <div class="card-grid three-cols">
+                    <div class="card text-center">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zM12 11h-1v-4h1v4zm0 2h-1v-1h1v1z">
+                            </path>
+                        </svg>
+                        <h4>Privacy First</h4>
+                        <p>All data stays on your device. No tracking, no analytics, no data collection.</p>
+                    </div>
+                    <div class="card text-center">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm0-4H7v-2h10v2z">
+                            </path>
+                        </svg>
+                        <h4>Open Data</h4>
+                        <p>Built on OpenFoodFacts, a free and open database maintained by volunteers.</p>
+                    </div>
+                    <div class="card text-center">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7.5l5-9v4H17l-5 9z">
+                            </path>
+                        </svg>
+                        <h4>Sustainability Focus</h4>
+                        <p>Not just nutrition - we show you the environmental impact of your food choices.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card cta-card">
+                <h3>Get in Touch</h3>
+                <p>Have questions, feedback, or want to contribute? We'd love to hear from you.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-light">Email Us</button>
+                    <button class="btn btn-outline-light">Join Community</button>
+                </div>
+            </div>
+
+            <div class="activity-layout">
+                <div class="card">
+                    <h3>Achievements</h3>
+                    <div class="achievements-grid" id="achievements-grid">
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Recent Activity</h3>
+                    <ul class="activity-list" id="recent-activity-list">
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-col">
+                <a href="#" class="logo" data-page="home">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.22 8.39C16.22 8.39 15.3 9.3 15.3 9.3C15.3 9.3 16.25 10.23 16.25 10.23C17.15 10.3 18 11.14 18 12.18C18 13.53 16.88 14.65 15.52 14.65C15.22 14.65 14.93 14.59 14.67 14.49L13.13 16.03C13.91 16.34 14.76 16.5 15.65 16.5C18.12 16.5 20.15 14.58 20.15 12.18C20.15 10.39 18.77 8.89 17.03 8.54C16.78 8.49 16.51 8.44 16.22 8.39ZM12 4C13.06 4 14.06 4.28 14.93 4.77L8.77 10.93C8.28 10.06 8 9.06 8 8C8 5.79 9.79 4 12 4ZM8.39 8.78L14.49 14.67C14.59 14.93 14.65 15.22 14.65 15.52C14.65 16.88 13.53 18 12.18 18C11.14 18 10.3 17.15 10.23 16.25C10.23 16.25 9.3 15.3 9.3 15.3C9.3 15.3 8.39 16.22 8.39 16.22C8.44 16.51 8.49 16.78 8.54 17.03C8.89 18.77 10.39 20.15 12.18 20.15C14.58 20.15 16.5 18.12 16.5 15.65C16.5 14.76 16.34 13.91 16.03 13.13L10.93 8.77C10.06 9.22 9.06 9.5 8 9.5C5.79 9.5 4 7.71 4 5.5C4 4.54 4.24 3.65 4.66 2.88C3.12 4.2 2.25 6.09 2.25 8.18C2.25 10.39 3.6 12.28 5.5 12.87V12.87C6.01 12.72 6.47 12.48 6.87 12.17L8.39 8.78Z"
+                            fill="#3A8E71" />
+                    </svg>
+                    <span>EcoFood Tracker</span>
+                </a>
+            </div>
+            <div class="footer-col">
+                <strong>Quick Links</strong>
+                <ul>
+                    <li><a href="#" data-page="search">Search Foods</a></li>
+                    <li><a href="#" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-page="profile">Settings</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <strong>Information</strong>
+                <ul>
+                    <li><a href="#" data-page="about">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <strong>Contact</strong>
+                <p>hello@ecofoodtracker.com</p>
+            </div>
+        </div>
+        <div class="container footer-legal">
+            <p>&copy; 2025 EcoFood Tracker. Powered by the community.</p>
+        </div>
+    </footer>
+
+    <div id="modal-overlay" class="hidden"></div>
+    <div id="modal-container" class="card hidden">
+        <button id="modal-close-btn" class="modal-close" aria-label="Close modal">&times;</button>
+        <div id="modal-content">
+        </div>
+    </div>
+    <!-- CAMERA SCANNER MODAL -->
+
+
+    <div id="scanner-overlay" class="hidden" style="
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+    z-index: 9998;
+"></div>
+
+    <div id="scanner-modal" class="card hidden" style="
+    position: fixed; top:50%; left:50%;
+    transform: translate(-50%, -50%);
+    padding:20px; z-index:9999; max-width:420px;
+">
+        <button id="scanner-close-btn" class="modal-close">&times;</button>
+
+        <h2>Scan Barcode</h2>
+        <p>Align the barcode inside the box.</p>
+
+        <!-- CAMERA WINDOW -->
+        <div id="scanner-view" style="width: 100%; height: 320px;"></div>
+
+        <p id="scanner-status">Initializing camera…</p>
+    </div>
+    <!-- MANUAL BARCODE ENTRY MODAL -->
+    <div id="barcode-overlay" class="hidden" style="
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(2px);
+    z-index: 9998;">
+    </div>
+
+    <div id="barcode-modal" class="card hidden">
+
+        <button id="barcode-close-btn" class="modal-close">&times;</button>
+
+        <h2>Enter Barcode</h2>
+
+        <input id="barcode-input" placeholder="Enter product barcode…"
+            style="width:100%; padding:12px; margin:12px 0; font-size:16px;">
+
+        <button id="barcode-search-btn" style="padding:10px 20px; width:100%; 
+        background:#3A8E71; color:white; border:none; cursor:pointer;">
+            Search Product
+        </button>
+
+        <div id="barcode-result" style="margin-top:15px;"></div>
+    </div>
+
+</body>
+
+</html>

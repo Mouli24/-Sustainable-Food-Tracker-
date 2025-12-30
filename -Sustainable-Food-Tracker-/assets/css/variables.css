@@ -1,0 +1,45 @@
+/* ============================================= */
+/* CSS VARIABLES (THEME)                         */
+/* ============================================= */
+:root {
+    --primary-green: #3A8E71;
+    --primary-green-dark: #2A6851;
+    --primary-green-light: #EAF3EF;
+    --text-color: #333333;
+    --text-color-light: #555555;
+    --bg-color: #F9FDFB;
+    --card-bg: #FFFFFF;
+    --border-color: #E0E0E0;
+    --grade-a: #00884A;
+    --grade-b: #85BB2F;
+    --grade-c: #FDCB01;
+    --grade-d: #F08200;
+    --grade-e: #E60012;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ============================================= */
+/* DARK MODE VARIABLES                           */
+/* ============================================= */
+:root.dark-mode {
+    --primary-green: #4CAF50;
+    --primary-green-dark: #3A8E71;
+    --primary-green-light: #2a3b33;
+    --text-color: #E0E0E0;
+    --text-color-light: #AAAAAA;
+    --bg-color: #121212;
+    --card-bg: #1E1E1E;
+    --border-color: #333333;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================= */
+/* LARGER TEXT ACCESSIBILITY                     */
+/* ============================================= */
+:root.large-text {
+    font-size: 112.5%;
+    /* 18px base */
+}
