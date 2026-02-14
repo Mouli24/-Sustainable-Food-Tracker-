@@ -28,8 +28,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+let db = null;
+let storage = null;
+try { db = firebase.firestore(); } catch(e) { console.warn("Firestore not available, using localStorage fallback."); }
+try { storage = firebase.storage(); } catch(e) { console.warn("Storage not available."); }
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 
@@ -105,13 +107,17 @@ $("signup-form")?.addEventListener("submit", async (e) => {
         await cred.user.updateProfile({ displayName: name });
 
         // Create user profile document in Firestore
-        await db.collection("users").doc(cred.user.uid).set({
-            name: name,
-            email: email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            ecoPoints: 0,
-            totalScans: 0
-        });
+        if (db) {
+            try {
+                await db.collection("users").doc(cred.user.uid).set({
+                    name: name,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    ecoPoints: 0,
+                    totalScans: 0
+                });
+            } catch(e) { /* Firestore not available */ }
+        }
 
     } catch (err) {
         errorEl.textContent = friendlyAuthError(err.code);
@@ -130,15 +136,17 @@ $("google-login-btn")?.addEventListener("click", async () => {
     try {
         const result = await auth.signInWithPopup(googleProvider);
         // If new user, create Firestore profile
-        if (result.additionalUserInfo?.isNewUser) {
-            await db.collection("users").doc(result.user.uid).set({
-                name: result.user.displayName || "",
-                email: result.user.email || "",
-                photoURL: result.user.photoURL || "",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                ecoPoints: 0,
-                totalScans: 0
-            });
+        if (result.additionalUserInfo?.isNewUser && db) {
+            try {
+                await db.collection("users").doc(result.user.uid).set({
+                    name: result.user.displayName || "",
+                    email: result.user.email || "",
+                    photoURL: result.user.photoURL || "",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    ecoPoints: 0,
+                    totalScans: 0
+                });
+            } catch(e) { /* Firestore not available */ }
         }
     } catch (err) {
         const errorEl = $("login-error");
@@ -211,7 +219,7 @@ $("save-profile-btn")?.addEventListener("click", async () => {
     try {
         const user = auth.currentUser;
         await user.updateProfile({ displayName: newName });
-        await db.collection("users").doc(user.uid).update({ name: newName });
+        if (db) { try { await db.collection("users").doc(user.uid).update({ name: newName }); } catch(e) {} }
 
         $("profile-display-name").textContent = newName;
         $("hero-user-name").textContent = newName.split(" ")[0];
@@ -239,13 +247,17 @@ $("avatar-upload")?.addEventListener("change", async (e) => {
 
     try {
         // Upload to Firebase Storage
+        if (!storage) {
+            showError('Storage is not configured. Please enable Firebase Storage in your Firebase Console.');
+            return;
+        }
         const ref = storage.ref(`avatars/${user.uid}`);
         await ref.put(file);
         const url = await ref.getDownloadURL();
 
         // Update auth profile and Firestore
         await user.updateProfile({ photoURL: url });
-        await db.collection("users").doc(user.uid).update({ photoURL: url });
+        if (db) { try { await db.collection("users").doc(user.uid).update({ photoURL: url }); } catch(e) {} }
 
         // Refresh UI
         updateProfileAvatar(auth.currentUser);
@@ -362,20 +374,35 @@ let trackerData = {
 };
 
 async function loadTrackerData(uid) {
+    if (db) {
+        try {
+            const doc = await db.collection("trackerData").doc(uid).get();
+            if (doc.exists) {
+                trackerData = { ...trackerData, ...doc.data() };
+                return;
+            }
+        } catch (e) { /* Firestore unavailable */ }
+    }
+    // Fallback: localStorage
     try {
-        const doc = await db.collection("trackerData").doc(uid).get();
-        if (doc.exists) {
-            trackerData = { ...trackerData, ...doc.data() };
-        }
+        const saved = localStorage.getItem("ecofood_tracker_" + uid);
+        if (saved) trackerData = { ...trackerData, ...JSON.parse(saved) };
     } catch (e) { /* ignore */ }
 }
 
 async function saveTrackerData() {
     const user = auth.currentUser;
     if (!user) return;
+    // Always save to localStorage (instant)
     try {
-        await db.collection("trackerData").doc(user.uid).set(trackerData);
+        localStorage.setItem("ecofood_tracker_" + user.uid, JSON.stringify(trackerData));
     } catch (e) { /* ignore */ }
+    // Also try Firestore
+    if (db) {
+        try {
+            await db.collection("trackerData").doc(user.uid).set(trackerData);
+        } catch (e) { /* ignore */ }
+    }
 }
 
 function trackScan() {
